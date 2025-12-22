@@ -19,7 +19,7 @@ Pubs can search for upcoming events, which will then allow them to select themse
 **[DELETE]**
 Pub can remove themselves from the list of places showing an event
 
-`/api/v1/pub/event/{event_id}
+`/api/v1/pub/event/{event_id}`
 
 ---
 
