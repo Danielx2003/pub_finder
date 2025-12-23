@@ -3,7 +3,7 @@ __pycache__/
 *.py[codz]
 *$py.class
 
-/src/backend/pubfinder/manage.py``
+**/migrations/*.py
 
 # C extensions
 *.so
