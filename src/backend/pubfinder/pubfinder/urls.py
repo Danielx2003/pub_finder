@@ -4,5 +4,5 @@ from rest_framework import routers
 from accounts import views
 
 urlpatterns = [
-    path("", include("accounts.urls")),
+    path("api/v1/", include("accounts.urls")),
 ]
