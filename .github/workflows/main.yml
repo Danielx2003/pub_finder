@@ -4,8 +4,15 @@ on:
       - '**'
 
 jobs:
-  hello-world:
+  ci:
     runs-on: ubuntu-latest
+  
     steps:
-      - run: echo "Hello World"
+    - name: Checkout Code
+      uses: actions/checkout@v6
+
+    - name: Install Dependencies
+      run: pip install -r ./src/backend/pubfinder/requirements.txt
+      
+      
 
