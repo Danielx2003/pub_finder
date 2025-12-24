@@ -1,5 +1,8 @@
+"""File for url endpoint patterns"""
+
 from django.urls import path
 from . import views
+
 
 urlpatterns = [
     path("", views.PubListView.as_view(), name="Pub-view-list"),
