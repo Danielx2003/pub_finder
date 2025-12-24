@@ -11,8 +11,8 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v6
 
-    - name: Say Hello World
-      run: echo "Hello World"
+    - name: Install Dependencies
+      run: pip install -r requirements.txt
       
       
 
