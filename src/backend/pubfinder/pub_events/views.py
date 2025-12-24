@@ -12,7 +12,8 @@ class PubEventListView(APIView):
         pub_events = PubEvent.objects.all()
 
         serializer = PubEventSerializer(pub_events, many=True)
-        print("")
+        print("" \
+        "")
 
         return Response(serializer.data, status=status.HTTP_200_OK)
     
