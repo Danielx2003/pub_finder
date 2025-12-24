@@ -1,5 +1,4 @@
 """File for API Endpoints"""
-
 # pylint: disable=missing-function-docstring
 
 from rest_framework.views import APIView
