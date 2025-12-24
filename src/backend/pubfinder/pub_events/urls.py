@@ -1,3 +1,5 @@
+"""URL endpoints for /api/v_/pubevent"""
+
 from django.urls import path
 from . import views
 
