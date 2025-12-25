@@ -16,5 +16,9 @@ jobs:
 
     - name: Linter
       run: pylint src/backend/pubfinder/
-      
 
+    - name: API Unit Tests
+      run: |
+        cd src/backend/pubfinder
+        echo pwd
+        python manage.py test
