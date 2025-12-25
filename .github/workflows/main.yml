@@ -15,6 +15,6 @@ jobs:
       run: pip install -r ./src/backend/pubfinder/requirements.txt
 
     - name: Linter
-      run: pylint src/backend/pubfinder
+      run: pylint src/backend/pubfinder/
       
 
