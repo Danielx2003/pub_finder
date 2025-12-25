@@ -1,3 +1,5 @@
+"""Endpoint URLs for /api/v_/events"""
+
 from django.urls import path
 from . import views
 
