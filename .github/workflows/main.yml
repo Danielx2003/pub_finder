@@ -6,6 +6,8 @@ on:
 jobs:
   ci:
     runs-on: ubuntu-latest
+    env:
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
   
     steps:
     - name: Checkout Code
@@ -18,9 +20,7 @@ jobs:
       run: pylint src/backend/pubfinder/
 
     - name: API Unit Tests
-      env:
-        SECRET_KEY: ${{ secrets.SECRET_KEY }}
-        run: |
-          cd src/backend/pubfinder
-          echo pwd
-          python manage.py test
+      run: |
+        cd src/backend/pubfinder
+        echo pwd
+        python manage.py test
