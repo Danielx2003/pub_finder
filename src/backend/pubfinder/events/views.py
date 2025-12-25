@@ -16,6 +16,7 @@ class EventListView(APIView):
     def get(self, request):
         name = request.GET.get('name', "")
         sport = request.GET.get('sport', "")
+        ordering = request.GET.get('ordering', "")
 
         events = Event.objects.all()
 
@@ -23,6 +24,10 @@ class EventListView(APIView):
             events = Event.objects.filter(name__contains=name)
         if sport:
             events = Event.objects.filter(sport=sport)
+
+        if ordering:
+            ordering_fields = [field.strip() for field in ordering.split(',')]
+            events = Event.objects.order_by(*ordering_fields)
 
         serializer = EventSerializer(events, many=True)
 
