@@ -14,7 +14,15 @@ from events.serializers import EventSerializer
 class EventListView(APIView):
     """[GET] Returns all Events"""
     def get(self, request):
+        name = request.GET.get('name', "")
+        sport = request.GET.get('sport', "")
+
         events = Event.objects.all()
+
+        if name:
+            events = Event.objects.filter(name__contains=name)
+        if sport:
+            events = Event.objects.filter(sport=sport)
 
         serializer = EventSerializer(events, many=True)
 
