@@ -1,7 +1,6 @@
-from django.urls import include, path
-from rest_framework import routers
+"""URLs for API"""
 
-from accounts import views
+from django.urls import include, path
 
 urlpatterns = [
     path("api/v1/pub", include("accounts.urls")),
