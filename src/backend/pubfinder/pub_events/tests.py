@@ -1,9 +1,9 @@
 """Unit Tests for API Endpoints of PubEvents app"""
+from datetime import datetime
 
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
-from datetime import datetime
 from django.utils import timezone
 
 from pub_events.models import PubEvent
