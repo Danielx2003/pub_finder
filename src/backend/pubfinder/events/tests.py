@@ -22,12 +22,12 @@ class EventAPITest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_get_all_events_returns_ok(self):
-            """Test Get endpoint for all pubs returns 200"""
-            url = reverse("Event-view-list")
+        """Test Get endpoint for all pubs returns 200"""
+        url = reverse("Event-view-list")
 
-            response = self.client.get(url)
+        response = self.client.get(url)
 
-            self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_create_event_missing_name_returns_400(self):
         """Test request with invalid payload body returns 400"""
