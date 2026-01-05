@@ -61,7 +61,7 @@ class PubEventAPITest(APITestCase):
 
         dt = datetime.fromisoformat("2025-12-25T12:00")
         dt = timezone.make_aware(dt)
-        
+
         Pub.objects.create(name='Pub 1', latitude= 40.741895, longitude= -73.989308,)
         Event.objects.create(name='Event 1', date_time=dt)
 
