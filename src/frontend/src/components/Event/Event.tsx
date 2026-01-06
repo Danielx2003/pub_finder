@@ -6,7 +6,7 @@ type EventProps = {
 }
 
 export default function Event({name, datetime}: EventProps) {
-    var options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
     const date = datetime.toLocaleDateString("en-US", options);
 
     return (
