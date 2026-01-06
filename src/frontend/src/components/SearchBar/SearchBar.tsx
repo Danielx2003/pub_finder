@@ -1,10 +1,10 @@
 type SearchBarProps = {
     searchValue: string,
-    setSearchValue: Function,
-    placeholder: string
+    setSearchValue: (value: string) => string
+    placeholder?: string
 }
 
-export default function SearchBar({searchValue, setSearchValue, placeholder}: SearchBarProps) {   
+export default function SearchBar({searchValue, setSearchValue, placeholder = 'Search'}: SearchBarProps) {   
     const handleTyping = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchValue(e.target.value)
     }
