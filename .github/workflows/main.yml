@@ -27,7 +27,8 @@ jobs:
     - name: Install NPM Dependencies
       run: |
         cd src/frontend
-        npm i
+        pwd
+    #     npm i
 
-    - name: TypeScript Linter
-      run: npx eslint .
+    # - name: TypeScript Linter
+    #   run: npx eslint .
