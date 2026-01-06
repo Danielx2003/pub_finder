@@ -13,10 +13,10 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v6
 
-    - name: Install Dependencies
+    - name: Install Python Dependencies
       run: pip install -r ./src/backend/pubfinder/requirements.txt
 
-    - name: Linter
+    - name: Python Linter
       run: pylint src/backend/pubfinder/
 
     - name: API Unit Tests
@@ -24,3 +24,19 @@ jobs:
         cd src/backend/pubfinder
         echo pwd
         python manage.py test
+
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+        check-latest: true
+
+    - name: Install NPM Dependencies
+      run: |
+        cd src/frontend
+        npm ci
+
+    - name: TypeScript Linter
+      run: |
+        cd src/frontend
+        npx eslint .
