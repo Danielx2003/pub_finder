@@ -40,3 +40,8 @@ jobs:
       run: |
         cd src/frontend
         npx eslint .
+
+    - name: React Tests
+      run: |
+        cd src/frontend
+        npm run test 
