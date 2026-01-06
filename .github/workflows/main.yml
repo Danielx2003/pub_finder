@@ -36,4 +36,6 @@ jobs:
         npm ci
 
     - name: TypeScript Linter
-      run: pwd
+      run: |
+        cd src/frontend
+        npx eslint .
