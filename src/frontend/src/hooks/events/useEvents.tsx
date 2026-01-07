@@ -5,6 +5,7 @@ type UseEventsParams = {
   name?: string
   sport?: string
   date?: string
+  time?: string
   sortBy?: string
 }
 
@@ -56,7 +57,7 @@ export function useEvents(params: UseEventsParams) {
       clearTimeout(loadingTimer)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params.name, params.sport, params.date, params.sortBy])
+  }, [params.name, params.sport, params.date, params.sortBy, params.time])
 
   return { data, loading: showLoading, error }
 }
