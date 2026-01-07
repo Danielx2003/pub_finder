@@ -2,6 +2,8 @@
 
 # pylint: disable=missing-function-docstring
 
+from datetime import datetime
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -16,18 +18,29 @@ class EventListView(APIView):
     def get(self, request):
         name = request.GET.get('name', "")
         sport = request.GET.get('sport', "")
-        ordering = request.GET.get('ordering', "")
+        sort_by = request.GET.get('sort_by', "")
+        start = request.GET.get('date', "")
 
         events = Event.objects.all()
 
         if name:
-            events = Event.objects.filter(name__contains=name)
-        if sport:
-            events = Event.objects.filter(sport=sport)
+            events = events.filter(name__contains=name)
 
-        if ordering:
-            ordering_fields = [field.strip() for field in ordering.split(',')]
-            events = Event.objects.order_by(*ordering_fields)
+        if sport:
+            events = events.filter(sport=sport)
+
+        if sort_by:
+            events = events.order_by(sort_by)
+
+        if start:
+            format = '%Y-%m-%d %H:%M'
+
+            try:
+                date_time = datetime.strptime(start, format)
+            except:
+                return Response({'message': 'Invalid start date provided. Must be in the format YYYY-MM-DD HH:mm'}, status=status.HTTP_400_BAD_REQUEST)
+
+            events = events.filter(date_time__gte=date_time)
 
         serializer = EventSerializer(events, many=True)
 
