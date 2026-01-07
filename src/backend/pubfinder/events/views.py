@@ -33,12 +33,13 @@ class EventListView(APIView):
             events = events.order_by(sort_by)
 
         if start:
-            format = '%Y-%m-%d %H:%M'
-
             try:
-                date_time = datetime.strptime(start, format)
-            except:
-                return Response({'message': 'Invalid start date provided. Must be in the format YYYY-MM-DD HH:mm'}, status=status.HTTP_400_BAD_REQUEST)
+                date_time = datetime.strptime(start, '%Y-%m-%d %H:%M')
+            except ValueError:
+                return Response({
+                    'message': 
+                    'Invalid start date provided. Must be in the format YYYY-MM-DD HH:mm'}, 
+                    status=status.HTTP_400_BAD_REQUEST)
 
             events = events.filter(date_time__gte=date_time)
 
