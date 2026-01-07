@@ -7,12 +7,19 @@ import './EventSearch.css'
 export default function EventSearch() {
   const [searchValue, setSearchValue] = useState('')
   const [view, setView] = useState<'list' | 'map'>('list')
+
+  const dateNow = new Date()
+
   const [filters, setFilters] = useState({
     sport: '',
-    date: ''
+    date: `${dateNow.getFullYear()}-` + 
+          `${(dateNow.getMonth() + 1).toString().padStart(2, "0")}-` +
+          `${dateNow.getDate().toString().padStart(2, "0")}`,
+    time: `${dateNow.getUTCHours()}:${dateNow.getMinutes()}`
   })
-  const [sort, setSort] = useState('-date_time')
 
+  const [sort, setSort] = useState('date_time')
+  
   const debouncedSearchValue = useDebounce(searchValue, 500)
 
   const { data: events, loading, error } = useEvents({
@@ -52,11 +59,11 @@ export default function EventSearch() {
               onChange={(e) => setFilters({ ...filters, sport: e.target.value })}
             >
               <option value="">All</option>
-              <option value="boxing">Boxing</option>
-              <option value="darts">Darts</option>
-              <option value="football">Football</option>
-              <option value="golf">Golf</option>
-              <option value="tennis">Tennis</option>
+              <option value="BOXING">Boxing</option>
+              <option value="DARTS">Darts</option>
+              <option value="FOOTBALL">Football</option>
+              <option value="GOLF">Golf</option>
+              <option value="TENNIS">Tennis</option>
             </select>
           </div>
 
