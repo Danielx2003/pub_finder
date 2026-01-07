@@ -1,6 +1,9 @@
 type GetEventsParams = {
   name?: string
   sport?: string
+  date?: string
+  time?: string
+  sortBy?: string
 }
 
 export async function getEvents(params: GetEventsParams) {
@@ -14,6 +17,16 @@ export async function getEvents(params: GetEventsParams) {
 
   if (params.sport) {
     url.searchParams.append('sport', params.sport)
+  }
+
+  if (params.sortBy)
+  {
+    url.searchParams.append('sort_by', params.sortBy)
+  }
+
+  if (params.date) {
+    const time = params.time ?? '00:00'
+    url.searchParams.append('start', `${params.date} ${time}`)
   }
 
   const res = await fetch(url.toString())

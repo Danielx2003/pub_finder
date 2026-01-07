@@ -19,7 +19,7 @@ class EventListView(APIView):
         name = request.GET.get('name', "")
         sport = request.GET.get('sport', "")
         sort_by = request.GET.get('sort_by', "")
-        start = request.GET.get('date', "")
+        start = request.GET.get('start', "")
 
         events = Event.objects.all()
 
