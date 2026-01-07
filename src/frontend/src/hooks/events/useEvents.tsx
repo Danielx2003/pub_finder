@@ -4,12 +4,15 @@ import { getEvents } from '../../api/Events/events'
 type UseEventsParams = {
   name?: string
   sport?: string
+  date?: string
+  sortBy?: string
 }
 
 type Event =  {
-  id: number,
-  name: string,
+  id: number
+  name: string
   sport: string
+  date_time: string
 }
 
 export function useEvents(params: UseEventsParams) {
@@ -53,7 +56,7 @@ export function useEvents(params: UseEventsParams) {
       clearTimeout(loadingTimer)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params.name, params.sport])
+  }, [params.name, params.sport, params.date, params.sortBy])
 
   return { data, loading: showLoading, error }
 }
