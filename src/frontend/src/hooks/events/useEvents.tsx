@@ -6,9 +6,14 @@ type UseEventsParams = {
   sport?: string
 }
 
+type Event =  {
+  id: number,
+  name: string,
+  sport: string
+}
+
 export function useEvents(params: UseEventsParams) {
-  const [data, setData] = useState<any[]>([])
-  const [loading, setLoading] = useState(false)
+  const [data, setData] = useState<Event[]>([])
   const [error, setError] = useState<Error | null>(null)
   const [showLoading, setShowLoading] = useState(false)
 
@@ -18,7 +23,6 @@ export function useEvents(params: UseEventsParams) {
 
     async function fetchEvents() {
       try {
-        setLoading(true)
         setError(null)
 
         loadingTimer = setTimeout(() => {
@@ -36,7 +40,6 @@ export function useEvents(params: UseEventsParams) {
         }
       } finally {
         if (!cancelled) {
-          setLoading(false)
           setShowLoading(false)
           clearTimeout(loadingTimer)
         }
@@ -49,6 +52,7 @@ export function useEvents(params: UseEventsParams) {
       cancelled = true
       clearTimeout(loadingTimer)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.name, params.sport])
 
   return { data, loading: showLoading, error }
