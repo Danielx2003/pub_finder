@@ -6,7 +6,6 @@ import './EventSearch.css'
 
 export default function EventSearch() {
   const [searchValue, setSearchValue] = useState('')
-  const [view, setView] = useState<'list' | 'map'>('list')
 
   const dateNow = new Date()
 
@@ -28,14 +27,6 @@ export default function EventSearch() {
     date: filters.date,
     sortBy: sort
   })
-
-  const options: Intl.DateTimeFormatOptions = {
-    hour: 'numeric',
-    minute: 'numeric',
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
-  }
   
   return (
     <div className="event-search-container">
@@ -99,34 +90,10 @@ export default function EventSearch() {
           </div>
         </aside>
         
-        <main className="main-content">
-          <div className="view-toggle">
-            <button 
-              className={`toggle-btn ${view === 'list' ? 'active' : ''}`}
-              onClick={() => setView('list')}
-            >
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                <rect x="2" y="3" width="14" height="2" rx="1" fill="currentColor"/>
-                <rect x="2" y="8" width="14" height="2" rx="1" fill="currentColor"/>
-                <rect x="2" y="13" width="14" height="2" rx="1" fill="currentColor"/>
-              </svg>
-              List View
-            </button>
-            <button 
-              className={`toggle-btn ${view === 'map' ? 'active' : ''}`}
-              onClick={() => setView('map')}
-            >
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                <path d="M1 6l5-3v12l-5 3V6zM12 3l5 3v12l-5-3V3zM6 3l6 3v12l-6-3V3z" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              Map View
-            </button>
-          </div>
-          
+        <main className="main-content">          
           {loading && <p className="status-message">Loading…</p>}
           {error && <p className="status-message error">{error.message}</p>}
           
-          {view === 'list' && (
             <div className="events-list">
               {events.map((event) => (
                 <div key={event.id} className="event-card">
@@ -135,7 +102,13 @@ export default function EventSearch() {
                     <p className="event-date">
                       {new Date(event.date_time).toLocaleDateString(
                         'en-US',
-                        options
+                        {
+                          hour: 'numeric',
+                          minute: 'numeric',
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric'
+                        }
                       )}
                     </p>
                   </div>
@@ -148,16 +121,6 @@ export default function EventSearch() {
                 </div>
               ))}
             </div>
-          )}
-          
-          {view === 'map' && (
-            <div className="map-placeholder">
-              <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
-                <path d="M10 25l20-10v50l-20 10V25zM50 15l20 10v50l-20-10V15zM30 15l20 10v50l-20-10V15z" stroke="currentColor" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              <p>Map view coming soon…</p>
-            </div>
-          )}
         </main>
       </div>
     </div>
