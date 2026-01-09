@@ -5,7 +5,8 @@ import { describe, it, expect } from 'vitest';
 
 describe('Event', () => {
     it('Renders the name', () => {
-        render(<Event 
+        render(<Event
+            id={'1'}
             name={'Event 1'}
             datetime={new Date(2024, 2, 10, 2, 30)}
             />);
@@ -14,7 +15,8 @@ describe('Event', () => {
     })
 
     it('Renders Date and Time', () => {
-        render(<Event 
+        render(<Event
+            id={'1'}
             name={'Event 1'}
             datetime={new Date(2024, 2, 10, 2, 30)}
             />);
