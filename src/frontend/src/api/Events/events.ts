@@ -37,3 +37,21 @@ export async function getEvents(params: GetEventsParams) {
 
   return res.json()
 }
+
+type getEventByIdParams = {
+  id: number
+}
+
+export async function getEventById(params: getEventByIdParams) {
+  const url = new URL(
+    `${import.meta.env.VITE_API_URL}/api/v1/event/${params.id}`
+  )
+
+  const res = await fetch(url.toString())
+
+  if (!res.ok) {
+    throw new Error(`Failed to find event with id: ${params.id}`)
+  }
+
+  return res.json()
+}
