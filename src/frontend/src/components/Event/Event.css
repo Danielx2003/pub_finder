@@ -1,0 +1,73 @@
+/* Event Component */
+.event-container {
+  background-color: #ffffff;
+  border: 1.5px solid #e9ecef;
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.event-header {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.event-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 0.5rem;
+}
+
+.event-datetime {
+  font-size: 1rem;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.event-countdown {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .event-container {
+    padding: 1.25rem;
+  }
+
+  .event-title {
+    font-size: 1.5rem;
+  }
+
+  .event-datetime {
+    font-size: 0.9375rem;
+  }
+
+  .event-header {
+    margin-bottom: 1.25rem;
+    padding-bottom: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .event-container {
+    padding: 1rem;
+  }
+
+  .event-title {
+    font-size: 1.25rem;
+  }
+
+  .event-datetime {
+    font-size: 0.875rem;
+  }
+
+  .event-header {
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+  }
+}
