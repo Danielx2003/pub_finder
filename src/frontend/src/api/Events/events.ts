@@ -39,7 +39,7 @@ export async function getEvents(params: GetEventsParams) {
 }
 
 type getEventByIdParams = {
-  id: number
+  id: string
 }
 
 export async function getEventById(params: getEventByIdParams) {
