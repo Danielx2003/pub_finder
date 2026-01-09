@@ -1,12 +1,18 @@
+"""Unit tests for PubEvents API"""
+
+# pylint: disable=too-many-instance-attributes
+
+from datetime import datetime
+
 from rest_framework import status
 from rest_framework.test import APITestCase
 from django.urls import reverse
 from django.utils import timezone
-from datetime import datetime
 
 from .models import Pub, Event, PubEvent
 
 class PubEventGetAllPubEventsTest(APITestCase):
+    """Tests for get all PubEvents"""
 
     def setUp(self):
         """Create shared test data"""
@@ -88,7 +94,7 @@ class PubEventGetAllPubEventsTest(APITestCase):
 
 
 class PubEventCreatePubEventTest(APITestCase):
-    """TestCase for Event"""
+    """Tests for create PubEvent"""
 
     def test_create_pub_event_missing_name_returns_400(self):
         """Test request with invalid payload body returns 400"""
