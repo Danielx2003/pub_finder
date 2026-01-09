@@ -1,43 +1,94 @@
-"""Unit Tests for API Endpoints of PubEvents app"""
-from datetime import datetime
-
-from rest_framework.test import APITestCase
 from rest_framework import status
+from rest_framework.test import APITestCase
 from django.urls import reverse
 from django.utils import timezone
+from datetime import datetime
 
-from pub_events.models import PubEvent
-from events.models import Event
-from accounts.models import Pub
+from .models import Pub, Event, PubEvent
 
-class PubEventAPITest(APITestCase):
-    """TestCase for Event"""
-    def test_valid_post_request_returns_ok(self):
-        """Test Post endpoint returns 201 for valid body"""
-        url = reverse("Pub-Event-view-create")
+class PubEventGetAllPubEventsTest(APITestCase):
 
-        dt = datetime.fromisoformat("2025-12-25T12:00")
-        dt = timezone.make_aware(dt)
+    def setUp(self):
+        """Create shared test data"""
+        dt = timezone.make_aware(datetime.fromisoformat("2025-12-25T12:00"))
 
-        Pub.objects.create(name='Pub 1', latitude= 40.741895, longitude= -73.989308,)
-        Event.objects.create(name='Event 1', date_time=dt)
+        self.pub1 = Pub.objects.create(
+            name="Pub 1", latitude=40.741895, longitude=-73.989308
+        )
+        self.pub2 = Pub.objects.create(
+            name="Pub 2", latitude=41.0, longitude=-74.0
+        )
 
-        payload = {
-            "pub_id": 1,
-            "event_id": 1 
-        }
+        self.event1 = Event.objects.create(name="Event 1", date_time=dt)
+        self.event2 = Event.objects.create(name="Event 2", date_time=dt)
 
-        response = self.client.post(url, payload)
+        self.pub_event1 = PubEvent.objects.create(
+            pub_id=self.pub1, event_id=self.event1
+        )
 
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.pub_event2 = PubEvent.objects.create(
+            pub_id=self.pub2, event_id=self.event1
+        )
+        self.pub_event3 = PubEvent.objects.create(
+            pub_id=self.pub1, event_id=self.event2
+        )
 
-    def test_get_all_events_returns_ok(self):
-        """Test Get endpoint for all pub_events returns 200"""
-        url = reverse("Pub-Event-view-list")
+        self.url = reverse("Pub-Event-view-list")
 
-        response = self.client.get(url)
+    def test_get_all_pub_events_returns_all(self):
+        """GET without query params returns all pub_events"""
+        response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 3)
+
+    def test_filter_by_event_id(self):
+        """GET with event_id filters correctly"""
+        response = self.client.get(self.url, {"event_id": self.event1.id})
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+
+        for item in response.data:
+            self.assertEqual(item["event_id"], self.event1.id)
+
+    def test_filter_by_pub_id(self):
+        """GET with pub_id filters correctly"""
+        response = self.client.get(self.url, {"pub_id": self.pub1.id})
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+
+        for item in response.data:
+            self.assertEqual(item["pub_id"], self.pub1.id)
+
+    def test_filter_by_pub_id_and_event_id(self):
+        """GET with both pub_id and event_id applies AND filtering"""
+        response = self.client.get(
+            self.url,
+            {"pub_id": self.pub1.id, "event_id": self.event1.id}
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+
+        result = response.data[0]
+        self.assertEqual(result["pub_id"], self.pub1.id)
+        self.assertEqual(result["event_id"], self.event1.id)
+
+    def test_filter_with_nonexistent_ids_returns_empty_list(self):
+        """GET with invalid query params returns empty list"""
+        response = self.client.get(
+            self.url,
+            {"pub_id": 999, "event_id": 999}
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, [])
+
+
+class PubEventCreatePubEventTest(APITestCase):
+    """TestCase for Event"""
 
     def test_create_pub_event_missing_name_returns_400(self):
         """Test request with invalid payload body returns 400"""
