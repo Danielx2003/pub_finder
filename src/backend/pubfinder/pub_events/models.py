@@ -7,5 +7,5 @@ from events.models import Event
 
 class PubEvent(models.Model):
     """Model for PubEvent object"""
-    pub_id = models.ForeignKey(Pub, on_delete=models.CASCADE)
-    event_id = models.ForeignKey(Event, on_delete=models.CASCADE)
+    pub = models.ForeignKey(Pub, on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)

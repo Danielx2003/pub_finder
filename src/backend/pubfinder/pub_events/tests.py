@@ -29,14 +29,14 @@ class PubEventGetAllPubEventsTest(APITestCase):
         self.event2 = Event.objects.create(name="Event 2", date_time=dt)
 
         self.pub_event1 = PubEvent.objects.create(
-            pub_id=self.pub1, event_id=self.event1
+            pub=self.pub1, event=self.event1
         )
 
         self.pub_event2 = PubEvent.objects.create(
-            pub_id=self.pub2, event_id=self.event1
+            pub=self.pub2, event=self.event1
         )
         self.pub_event3 = PubEvent.objects.create(
-            pub_id=self.pub1, event_id=self.event2
+            pub=self.pub1, event=self.event2
         )
 
         self.url = reverse("Pub-Event-view-list")
@@ -56,7 +56,7 @@ class PubEventGetAllPubEventsTest(APITestCase):
         self.assertEqual(len(response.data), 2)
 
         for item in response.data:
-            self.assertEqual(item["event_id"], self.event1.id)
+            self.assertEqual(item["event"]['id'], self.event1.id)
 
     def test_filter_by_pub_id(self):
         """GET with pub_id filters correctly"""
@@ -66,7 +66,7 @@ class PubEventGetAllPubEventsTest(APITestCase):
         self.assertEqual(len(response.data), 2)
 
         for item in response.data:
-            self.assertEqual(item["pub_id"], self.pub1.id)
+            self.assertEqual(item["pub"]['id'], self.pub1.id)
 
     def test_filter_by_pub_id_and_event_id(self):
         """GET with both pub_id and event_id applies AND filtering"""
@@ -79,8 +79,8 @@ class PubEventGetAllPubEventsTest(APITestCase):
         self.assertEqual(len(response.data), 1)
 
         result = response.data[0]
-        self.assertEqual(result["pub_id"], self.pub1.id)
-        self.assertEqual(result["event_id"], self.event1.id)
+        self.assertEqual(result["pub"]['id'], self.pub1.id)
+        self.assertEqual(result["event"]['id'], self.event1.id)
 
     def test_filter_with_nonexistent_ids_returns_empty_list(self):
         """GET with invalid query params returns empty list"""
