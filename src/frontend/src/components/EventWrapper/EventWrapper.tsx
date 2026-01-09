@@ -22,7 +22,8 @@ export default function EventWrapper() {
         <>
             {loading && <p className="status-message">Loading…</p>}
             {event && 
-                <Event 
+                <Event
+                    id={event.id}
                     name={event.name}
                     datetime={new Date(event.date_time)}
                 />}
