@@ -1,11 +1,14 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
+
 import SearchBar from '../SearchBar/SearchBar'
 import useDebounce from '../../hooks/useDebounce'
 import { useEvents } from '../../hooks/events/useEvents'
+
 import './EventSearch.css'
 
 export default function EventSearch() {
-  const [searchValue, setSearchValue] = useState('')
+  const [searchValue, setSearchValue] = useState<string>('')
 
   const dateNow = new Date()
 
@@ -112,12 +115,7 @@ export default function EventSearch() {
                       )}
                     </p>
                   </div>
-                  <button 
-                    className="view-btn"
-                    onClick={() => console.log('View', event.id)}
-                  >
-                    View Details
-                  </button>
+                  <Link to={'/events/' + event.id} className='view-btn'>View Details</Link>
                 </div>
               ))}
             </div>
