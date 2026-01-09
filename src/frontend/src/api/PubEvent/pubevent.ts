@@ -1,6 +1,6 @@
 type GetPubEventsParams = {
-  event_id?: string
-  pub_id?: string
+  event_id?: number
+  pub_id?: number
 }
 
 export async function getPubEvents(params: GetPubEventsParams) {
@@ -9,11 +9,11 @@ export async function getPubEvents(params: GetPubEventsParams) {
   )
 
   if (params.event_id) {
-    url.searchParams.append('event_id', params.event_id)
+    url.searchParams.append('event_id', params.event_id.toString())
   }
 
   if (params.pub_id) {
-    url.searchParams.append('pub_id', params.pub_id)
+    url.searchParams.append('pub_id', params.pub_id.toString())
   }
 
   const res = await fetch(url.toString())
