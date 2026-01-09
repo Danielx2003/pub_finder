@@ -7,7 +7,7 @@ import Event from '../Event/Event'
 export default function EventWrapper() {
     const navigate = useNavigate();
 
-    let { id } = useParams() as { id: string };
+    const { id } = useParams() as { id: string };
 
     const { event, loading, error } = useShowEvent({
         id
