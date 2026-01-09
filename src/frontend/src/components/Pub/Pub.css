@@ -1,0 +1,47 @@
+.pub-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 20px 24px;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.pub-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+}
+
+.pub-name {
+    margin: 0 0 16px 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #111827;
+    line-height: 1.3;
+}
+
+.pub-details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.pub-detail {
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.pub-label {
+    color: #6b7280;
+    font-weight: 500;
+    margin-right: 12px;
+}
+
+.pub-value {
+    color: #374151;
+    font-weight: 400;
+    font-variant-numeric: tabular-nums;
+}
