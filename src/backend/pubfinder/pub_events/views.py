@@ -12,7 +12,16 @@ from pub_events.serializers import PubEventSerializer
 class PubEventListView(APIView):
     """[GET] Returns all Pubs"""
     def get(self, request):
+        event_id = request.GET.get('event_id', "")
+        pub_id = request.GET.get('pub_id', "")
+
         pub_events = PubEvent.objects.all()
+
+        if event_id:
+            pub_events = pub_events.filter(event_id=event_id)
+
+        if pub_id:
+            pub_events = pub_events.filter(pub_id=pub_id)
 
         serializer = PubEventSerializer(pub_events, many=True)
 
