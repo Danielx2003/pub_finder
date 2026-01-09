@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { getEventById } from '../../api/Events/events'
 
 type UseShowEventParams = {
-    id: number
+    id: string
 }
 
 type Event =  {
@@ -13,7 +13,7 @@ type Event =  {
 }
 
 export function useShowEvent(params: UseShowEventParams) {
-  const [data, setData] = useState<Event | null>(null)
+  const [event, setEvent] = useState<Event | null>(null)
   const [error, setError] = useState<Error | null>(null)
   const [showLoading, setShowLoading] = useState(false)
 
@@ -32,7 +32,7 @@ export function useShowEvent(params: UseShowEventParams) {
         const result = await getEventById(params)
 
         if (!cancelled) {
-          setData(result)
+          setEvent(result)
         }
       } catch (err) {
         if (!cancelled) {
@@ -46,7 +46,14 @@ export function useShowEvent(params: UseShowEventParams) {
       }
     }
 
-    fetchEventById()
+    if (!Number.isNaN(parseInt(params.id)))
+    {
+      fetchEventById()
+    }
+    else
+    {
+      setError(new Error('Invalid param'))
+    }
 
     return () => {
       cancelled = true
@@ -55,5 +62,5 @@ export function useShowEvent(params: UseShowEventParams) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.id])
 
-  return { data, loading: showLoading, error }
+  return { event, loading: showLoading, error }
 }
