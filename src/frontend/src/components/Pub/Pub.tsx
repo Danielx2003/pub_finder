@@ -1,13 +1,12 @@
 import './Pub.css'
 
 type PubProps = {
-    id: number
     name: string
     longitude: number
     latitude: number
 }
 
-export default function Pub({id, name, longitude, latitude}: PubProps) {
+export default function Pub({name, longitude, latitude}: PubProps) {
     return (
         <div className="pub-card">
             <h3 className="pub-name">{name}</h3>
