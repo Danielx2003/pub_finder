@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import { getPubEvents } from '../../api/PubEvent/pubevent'
 
 type UseFetchPubEventsParams = {
-  event_id?: string
-  pub_id?: string
+  event_id?: number
+  pub_id?: number
 }
 
 type Event =  {
@@ -26,7 +26,7 @@ type PubEvent = {
     event: Event
 }
 
-export function useEvents(params: UseFetchPubEventsParams) {
+export function useFetchPubEvents(params: UseFetchPubEventsParams) {
   const [data, setData] = useState<PubEvent[]>([])
   const [error, setError] = useState<Error | null>(null)
   const [showLoading, setShowLoading] = useState(false)
