@@ -29,7 +29,7 @@ class PubCreateView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
 class PubGetByIdView(APIView):
     """[GET] Return single Pub by ID"""
     def get(self, request, pub_id):
