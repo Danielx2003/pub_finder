@@ -3,6 +3,8 @@
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
+from django.contrib.gis.geos import Point
+
 
 from accounts.models import Pub
 
@@ -62,8 +64,7 @@ class PubGetByIdAPITest(APITestCase):
     def setUp(self):
         self.pub = Pub.objects.create(
             name="The Green Man",
-            latitude=40.741895,
-            longitude=-73.989308,
+            location=Point(-73.989308, 40.741895)
         )
         self.url = reverse("get-pub-by-id", args=[self.pub.id])
 
