@@ -5,16 +5,12 @@ from django.contrib.gis.geos import Point
 from accounts.models import Pub
 
 class PubSerializer(serializers.ModelSerializer):
-    """Serializer for Pub object"""
-
-    latitude = serializers.FloatField(write_only=True)
-    longitude = serializers.FloatField(write_only=True)
-    latitude_read = serializers.SerializerMethodField()
-    longitude_read = serializers.SerializerMethodField()
+    latitude = serializers.FloatField(write_only=True, required=True)
+    longitude = serializers.FloatField(write_only=True, required=True)
 
     class Meta:
         model = Pub
-        fields = ['id', 'name', 'latitude', 'longitude', 'latitude_read', 'longitude_read']
+        fields = ['id', 'name', 'latitude', 'longitude']
 
     def create(self, validated_data):
         lat = validated_data.pop('latitude')
@@ -22,8 +18,8 @@ class PubSerializer(serializers.ModelSerializer):
         validated_data['location'] = Point(lon, lat)
         return super().create(validated_data)
 
-    def get_latitude_read(self, obj):
-        return obj.location.y
-
-    def get_longitude_read(self, obj):
-        return obj.location.x
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['latitude'] = instance.location.y
+        data['longitude'] = instance.location.x
+        return data
