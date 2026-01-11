@@ -8,6 +8,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from django.urls import reverse
 from django.utils import timezone
+from django.contrib.gis.geos import Point
 
 from .models import Pub, Event, PubEvent
 
@@ -19,10 +20,10 @@ class PubEventGetAllPubEventsTest(APITestCase):
         dt = timezone.make_aware(datetime.fromisoformat("2025-12-25T12:00"))
 
         self.pub1 = Pub.objects.create(
-            name="Pub 1", latitude=40.741895, longitude=-73.989308
+            name="Pub 1", location=Point(-73.989308 ,40.741895)
         )
         self.pub2 = Pub.objects.create(
-            name="Pub 2", latitude=41.0, longitude=-74.0
+            name="Pub 2", location=Point(74.0, 41.0)
         )
 
         self.event1 = Event.objects.create(name="Event 1", date_time=dt)
@@ -111,18 +112,19 @@ class PubEventCreatePubEventTest(APITestCase):
     def test_create_event_persists_to_db(self):
         """Test created PubEvent is stored in DB"""
         url = reverse("Pub-Event-view-create")
-        payload = {
-            "pub_id": 1,
-            "event_id": 1
-        }
 
         dt = datetime.fromisoformat("2025-12-25T12:00")
         dt = timezone.make_aware(dt)
 
-        Pub.objects.create(name='Pub 1', latitude= 40.741895, longitude= -73.989308,)
-        Event.objects.create(name='Event 1', date_time=dt)
+        pub = Pub.objects.create(name='Pub 1', location=Point(-73.989308, 40.741895))
+        event = Event.objects.create(name='Event 1', date_time=dt)
+
+        payload = {
+            "pub_id": pub.id,
+            "event_id": event.id
+        }
 
         _ = self.client.post(url, payload, format="json")
 
         self.assertEqual(PubEvent.objects.count(), 1)
-        self.assertTrue(PubEvent.objects.filter(pub_id=1, event_id=1).exists())
+        self.assertTrue(PubEvent.objects.filter(pub_id=pub.id, event_id=event.id).exists())
