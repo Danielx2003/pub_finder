@@ -5,6 +5,8 @@ from django.contrib.gis.geos import Point
 from accounts.models import Pub
 
 class PubSerializer(serializers.ModelSerializer):
+    """Serializer for Pub"""
+
     latitude = serializers.FloatField(write_only=True, required=True)
     longitude = serializers.FloatField(write_only=True, required=True)
 

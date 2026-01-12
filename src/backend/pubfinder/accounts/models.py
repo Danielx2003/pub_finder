@@ -1,6 +1,5 @@
 """File for models within the Accounts app"""
 
-from django.db import models
 from django.contrib.gis.db import models
 
 class Pub(models.Model):
