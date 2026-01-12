@@ -4,6 +4,7 @@ import Countdown from '../Countdown/Countdown'
 import { useFetchPubEvents } from '../../hooks/pubevents/useFetchPubEvents'
 import Pub from '../Pub/Pub'
 import GoogleMap from '../GoogleMap/GoogleMap'
+import useUserCoordinates from '../../hooks/useUserCoordinates'
 
 import './Event.css'
 
@@ -15,9 +16,14 @@ type EventProps = {
   datetime: Date
 }
 
+type UseUserCoordinatesReturn = {
+  latitude: number
+  longitude: number
+  error: string | null
+}
+
 export default function Event({id, name, datetime}: EventProps) {
-  const [latitude, setLatitude] = useState<number>(0);
-  const [longitude, setLongitude] = useState<number>(0);
+  const [view, setView] = useState<'list' | 'map'>('list')
 
   const options: Intl.DateTimeFormatOptions = {
     year: 'numeric',
@@ -31,12 +37,7 @@ export default function Event({id, name, datetime}: EventProps) {
     event_id: id
   })
 
-  if ("geolocation" in navigator) {
-    navigator.geolocation.getCurrentPosition((position) => {
-      setLatitude(position.coords.latitude);
-      setLongitude(position.coords.longitude);
-    })
-  }
+  const { latitude, longitude, error: locationError }: UseUserCoordinatesReturn = useUserCoordinates()
 
   return (
     <div className="event-wrapper">
@@ -57,29 +58,55 @@ export default function Event({id, name, datetime}: EventProps) {
 
         {error && <p className="pubs-error">Unable to load venues</p>}
 
-        <div className="pubs-grid">
-          {pubevents?.map(pubevent => (
-            <Pub
-              key={pubevent.pub.id}
-              name={pubevent.pub.name}
-              longitude={pubevent.pub.longitude}
-              latitude={pubevent.pub.latitude}
-            />
-          ))}
+        <div className="view-toggle">
+          <button
+            className={`view-toggle-button ${view === 'list' ? 'active' : ''}`}
+            onClick={() => setView('list')}
+          >
+            List View
+          </button>
+          <button
+            className={`view-toggle-button ${view === 'map' ? 'active' : ''}`}
+            onClick={() => setView('map')}
+          >
+            Map View
+          </button>
         </div>
 
-        <div>
-          <GoogleMap
-            userLat={latitude}
-            userLong={longitude}
-            locations={pubevents.map<Poi>((pubevent) => ({
-              key: pubevent.id,
-              location: {
-                lat: pubevent.pub.latitude,
-                lng: pubevent.pub.longitude,
-              },
-            }))}
-          />
+        <div className="pubs-content">
+          {view === 'list' && (
+            <div className="pubs-grid">
+              {pubevents?.map(pubevent => (
+                <Pub
+                  key={pubevent.pub.id}
+                  name={pubevent.pub.name}
+                  longitude={pubevent.pub.longitude}
+                  latitude={pubevent.pub.latitude}
+                />
+              ))}
+            </div>
+          )}
+
+          {view === 'map' && (
+            <div className="map-container">
+              {locationError && (
+                <p className="location-error">Error occurred fetching location</p>
+              )}
+              <div className="map-wrapper">
+                <GoogleMap
+                  userLat={latitude}
+                  userLong={longitude}
+                  locations={pubevents?.map<Poi>((pubevent) => ({
+                    key: pubevent.id,
+                    location: {
+                      lat: pubevent.pub.latitude,
+                      lng: pubevent.pub.longitude,
+                    },
+                  }))}
+                />
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
