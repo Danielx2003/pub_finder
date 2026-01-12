@@ -2,6 +2,8 @@ import Countdown from '../Countdown/Countdown'
 import { useFetchPubEvents } from '../../hooks/pubevents/useFetchPubEvents'
 import Pub from '../Pub/Pub'
 
+import TempMap from './TempMap'
+
 import './Event.css'
 
 type EventProps = {
@@ -39,7 +41,6 @@ export default function Event({id, name, datetime}: EventProps) {
         <h3 className="pubs-section-title">Showing at {pubevents?.length || 0} {pubevents?.length === 1 ? 'Pub' : 'Pubs'}</h3>
 
         {loading && <p className="pubs-loading">Loading venues...</p>}
-
         {error && <p className="pubs-error">Unable to load venues</p>}
 
         <div className="pubs-grid">
@@ -52,6 +53,9 @@ export default function Event({id, name, datetime}: EventProps) {
             />
           ))}
         </div>
+      </div>
+      <div>
+        <TempMap />
       </div>
     </div>
   )
