@@ -1,13 +1,11 @@
 """File for models within the Accounts app"""
 
-from django.db import models
-
+from django.contrib.gis.db import models
 
 class Pub(models.Model):
     """Model for Pub object"""
     name = models.CharField(max_length=255)
-    latitude = models.FloatField()
-    longitude = models.FloatField()
+    location = models.PointField(geography=True, srid=4326)
 
     def __str__(self):
         return f"{self.name}"

@@ -8,10 +8,24 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      DB_HOST: localhost
+
+    services:
+      db:
+        image: postgis/postgis:17-3.5
+        env:
+          POSTGRES_DB: gisdb
+          POSTGRES_USER: myuser
+          POSTGRES_PASSWORD: pass
+        ports:
+          - 5432:5432
   
     steps:
     - name: Checkout Code
       uses: actions/checkout@v6
+
+    - name: Install Postgis
+      run: sudo apt-get update && sudo apt install -y binutils libproj-dev gdal-bin postgis
 
     - name: Install Python Dependencies
       run: pip install -r ./src/backend/pubfinder/requirements.txt
