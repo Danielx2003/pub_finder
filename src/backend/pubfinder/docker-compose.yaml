@@ -9,13 +9,12 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-  django-api:
+  api:
+    depends_on:
+      - db
     build: .
-    container_name: django-docker
     ports:
       - "8000:8000"
-    depends_on:
-      - db    
 
 volumes:
   postgres_data:
