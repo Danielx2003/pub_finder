@@ -77,7 +77,7 @@ DATABASES = {
         'NAME': 'gisdb',
         'USER': 'myuser',
         'PASSWORD': 'pass',
-        'HOST': 'db',
+        'HOST': os.environ.get('DB_HOST'),
         'PORT': '5432',
     }
 }
