@@ -1,8 +1,13 @@
+import { useState } from 'react'
+
 import Countdown from '../Countdown/Countdown'
 import { useFetchPubEvents } from '../../hooks/pubevents/useFetchPubEvents'
 import Pub from '../Pub/Pub'
+import GoogleMap from '../GoogleMap/GoogleMap'
 
 import './Event.css'
+
+type Poi = { key: number, location: google.maps.LatLngLiteral }
 
 type EventProps = {
   id: number
@@ -11,6 +16,9 @@ type EventProps = {
 }
 
 export default function Event({id, name, datetime}: EventProps) {
+  const [latitude, setLatitude] = useState<number>(0);
+  const [longitude, setLongitude] = useState<number>(0);
+
   const options: Intl.DateTimeFormatOptions = {
     year: 'numeric',
     month: 'long',
@@ -22,6 +30,13 @@ export default function Event({id, name, datetime}: EventProps) {
   const { data: pubevents, loading, error } = useFetchPubEvents({
     event_id: id
   })
+
+  if ("geolocation" in navigator) {
+    navigator.geolocation.getCurrentPosition((position) => {
+      setLatitude(position.coords.latitude);
+      setLongitude(position.coords.longitude);
+    })
+  }
 
   return (
     <div className="event-wrapper">
@@ -51,6 +66,20 @@ export default function Event({id, name, datetime}: EventProps) {
               latitude={pubevent.pub.latitude}
             />
           ))}
+        </div>
+
+        <div>
+          <GoogleMap
+            userLat={latitude}
+            userLong={longitude}
+            locations={pubevents.map<Poi>((pubevent) => ({
+              key: pubevent.id,
+              location: {
+                lat: pubevent.pub.latitude,
+                lng: pubevent.pub.longitude,
+              },
+            }))}
+          />
         </div>
       </div>
     </div>
