@@ -8,6 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      DB_HOST: localhost
 
     services:
       db:
