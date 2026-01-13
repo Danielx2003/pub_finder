@@ -8,6 +8,7 @@ from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import D
+from django.contrib.gis.db.models.functions import GeometryDistance
 
 from pub_events.models import PubEvent
 from pub_events.serializers import PubEventSerializer
@@ -19,31 +20,49 @@ class PubEventPagination(PageNumberPagination):
     max_page_size = 1000
 
 class PubEventListView(APIView, PubEventPagination):
-    """[GET] Returns all Pubs"""
-    def get(self, request):
-        event_id = request.GET.get('event_id', "")
-        pub_id = request.GET.get('pub_id', "")
-        latitude = request.GET.get('latitude', "")
-        longitude = request.GET.get('longitude', "")
-        distance = request.GET.get('distance', "")
+    """[GET] Returns all pub events"""
 
-        pub_events = PubEvent.objects.all()
+    def get(self, request):
+        params = request.GET
+
+        event_id = params.get("event_id")
+        pub_id = params.get("pub_id")
+        latitude = params.get("latitude")
+        longitude = params.get("longitude")
+        distance = params.get("distance")
+
+        queryset = PubEvent.objects.all()
 
         if event_id:
-            pub_events = pub_events.filter(event_id=event_id)
+            queryset = queryset.filter(event_id=event_id)
 
         if pub_id:
-            pub_events = pub_events.filter(pub_id=pub_id)
+            queryset = queryset.filter(pub_id=pub_id)
 
         if latitude and longitude and distance:
-            pub_events = pub_events.filter(
-                pub__location__distance_lte=(
-                    Point(float(longitude),float(latitude), srid=4326),
-                    D(mi=float(distance))))
+            location = Point(
+                float(longitude),
+                float(latitude),
+                srid=4326,
+            )
+            queryset = (
+                queryset.filter(
+                    pub__location__distance_lte=(
+                        location,
+                        D(mi=float(distance)),
+                    )
+                )
+                .annotate(
+                    distance=GeometryDistance("pub__location", location)
+                )
+                .order_by("distance")
+            )
+        else:
+            queryset = queryset.order_by('id')
 
-        pub_events = self.paginate_queryset(pub_events, request, view=self)
+        page = self.paginate_queryset(queryset, request, view=self)
 
-        serializer = PubEventSerializer(pub_events, many=True)
+        serializer = PubEventSerializer(page, many=True)
 
         return self.get_paginated_response(serializer.data)
 
