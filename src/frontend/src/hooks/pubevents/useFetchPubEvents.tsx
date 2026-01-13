@@ -8,7 +8,7 @@ type UseFetchPubEventsParams = {
   longitude?: number
   distance?: number
   page?: number
-  pubEvents?: RefObject<PubEvent[]>
+  setPubEvents: React.Dispatch<React.SetStateAction<PubEvent[]>>
 }
 
 type Event =  {
@@ -71,7 +71,7 @@ export function useFetchPubEvents(params: UseFetchPubEventsParams) {
 
         if (!cancelled) {
           setResponse(result)
-          params.pubEvents?.current.push(...result.data)
+          params?.setPubEvents(prevItems => [...prevItems, ...result.data]);
         }
       } catch (err) {
         if (!cancelled) {
