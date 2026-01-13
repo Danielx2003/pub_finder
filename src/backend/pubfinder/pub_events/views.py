@@ -13,6 +13,7 @@ from pub_events.models import PubEvent
 from pub_events.serializers import PubEventSerializer
 
 class PubEventPagination(PageNumberPagination):
+    """Custom pagination for PubEvents"""
     page_size = 5
     page_size_query_param = 'page_size'
     max_page_size = 1000
