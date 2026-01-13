@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, type RefObject } from 'react'
+import { useEffect, useState } from 'react'
 
 import Countdown from '../Countdown/Countdown'
 import { useFetchPubEvents } from '../../hooks/pubevents/useFetchPubEvents'
@@ -56,7 +56,8 @@ export default function Event({id, name, datetime}: EventProps) {
 
   const date = datetime.toLocaleDateString("en-US", options);
 
-  let { data, metadata, loading, error } = useFetchPubEvents({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { data, metadata, loading, error } = useFetchPubEvents({
     page,
     event_id: id,
     setPubEvents

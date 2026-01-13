@@ -91,6 +91,7 @@ export function useFetchPubEvents(params: UseFetchPubEventsParams) {
       cancelled = true
       clearTimeout(loadingTimer)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.event_id, params.pub_id, params.longitude, params.longitude, params.page, params.distance])
 
   return {
