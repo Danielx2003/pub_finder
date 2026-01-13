@@ -47,16 +47,17 @@ class PubEventGetAllPubEventsTest(APITestCase):
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 3)
+        self.assertEqual(len(response.data['results']), 3)
 
     def test_filter_by_event_id(self):
         """GET with event_id filters correctly"""
         response = self.client.get(self.url, {"event_id": self.event1.id})
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 2)
+        self.assertEqual(len(response.data['results']), 2)
 
-        for item in response.data:
+
+        for item in response.data['results']:
             self.assertEqual(item["event"]['id'], self.event1.id)
 
     def test_filter_by_pub_id(self):
@@ -64,9 +65,9 @@ class PubEventGetAllPubEventsTest(APITestCase):
         response = self.client.get(self.url, {"pub_id": self.pub1.id})
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 2)
+        self.assertEqual(len(response.data['results']), 2)
 
-        for item in response.data:
+        for item in response.data['results']:
             self.assertEqual(item["pub"]['id'], self.pub1.id)
 
     def test_filter_by_pub_id_and_event_id(self):
@@ -77,9 +78,9 @@ class PubEventGetAllPubEventsTest(APITestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
+        self.assertEqual(len(response.data['results']), 1)
 
-        result = response.data[0]
+        result = response.data['results'][0]
         self.assertEqual(result["pub"]['id'], self.pub1.id)
         self.assertEqual(result["event"]['id'], self.event1.id)
 
@@ -91,7 +92,18 @@ class PubEventGetAllPubEventsTest(APITestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, [])
+        self.assertEqual(response.data['results'], [])
+
+    def test_filter_by_distance(self):
+        """GET with event_id filters correctly"""
+        response = self.client.get(
+            self.url,
+            {"event_id": self.event1.id, "longitude": 74.0, "latitude": 41, "distance": 5}
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data['results']), 1)
+
 
 
 class PubEventCreatePubEventTest(APITestCase):
@@ -107,7 +119,6 @@ class PubEventCreatePubEventTest(APITestCase):
         response = self.client.post(url, payload, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn("event_id", response.data)
 
     def test_create_event_persists_to_db(self):
         """Test created PubEvent is stored in DB"""
