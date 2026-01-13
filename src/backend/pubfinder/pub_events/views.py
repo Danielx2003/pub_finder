@@ -6,8 +6,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.gis.geos import Point
-from django.contrib.gis.db.models.functions import Distance
-from django.db.models import F
 from django.contrib.gis.measure import D
 
 from pub_events.models import PubEvent
