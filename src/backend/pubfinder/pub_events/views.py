@@ -5,13 +5,19 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.pagination import PageNumberPagination
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import D
 
 from pub_events.models import PubEvent
 from pub_events.serializers import PubEventSerializer
 
-class PubEventListView(APIView):
+class PubEventPagination(PageNumberPagination):
+    page_size = 5
+    page_size_query_param = 'page_size'
+    max_page_size = 1000
+
+class PubEventListView(APIView, PubEventPagination):
     """[GET] Returns all Pubs"""
     def get(self, request):
         event_id = request.GET.get('event_id', "")
@@ -34,9 +40,11 @@ class PubEventListView(APIView):
                     Point(float(longitude),float(latitude), srid=4326),
                     D(mi=float(distance))))
 
+        pub_events = self.paginate_queryset(pub_events, request, view=self)
+
         serializer = PubEventSerializer(pub_events, many=True)
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return self.get_paginated_response(serializer.data)
 
 class PubEventCreateView(APIView):
     """[POST] Creates a Pub"""
