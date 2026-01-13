@@ -1,4 +1,4 @@
-import { useEffect, useState, type RefObject } from 'react'
+import { useEffect, useState } from 'react'
 import { getPubEvents } from '../../api/PubEvent/pubevent'
 
 type UseFetchPubEventsParams = {
@@ -41,7 +41,7 @@ type Metadata = {
 type PubEventResponse = {
   data: PubEvent[]
   _metadata: Metadata | null
-  loading: Boolean
+  loading: boolean
   error: Error | null
 }
 
@@ -53,7 +53,7 @@ export function useFetchPubEvents(params: UseFetchPubEventsParams) {
     error: null
   });
   const [error, setError] = useState<Error | null>(null);
-  const [loading, setLoading] = useState<Boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     let cancelled = false
