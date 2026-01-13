@@ -6,8 +6,6 @@ import Pub from '../Pub/Pub'
 import GoogleMap from '../GoogleMap/GoogleMap'
 import useUserCoordinates from '../../hooks/useUserCoordinates'
 
-import TempMap from './TempMap'
-
 import './Event.css'
 
 type Poi = { key: number, location: google.maps.LatLngLiteral }
@@ -109,9 +107,6 @@ export default function Event({id, name, datetime}: EventProps) {
             </div>
           )}
         </div>
-      </div>
-      <div>
-        <TempMap />
       </div>
     </div>
   )
