@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState, useRef, type RefObject } from 'react'
 
 import Countdown from '../Countdown/Countdown'
 import { useFetchPubEvents } from '../../hooks/pubevents/useFetchPubEvents'
@@ -22,8 +22,31 @@ type UseUserCoordinatesReturn = {
   error: string | null
 }
 
+type Event =  {
+  id: number
+  name: string
+  sport: string
+  date_time: string
+}
+
+type Pub = {
+  id: number
+  name: string
+  latitude: number
+  longitude: number
+}
+
+type PubEvent = {
+  id: number
+  pub: Pub
+  event: Event
+}
+
+
 export default function Event({id, name, datetime}: EventProps) {
   const [view, setView] = useState<'list' | 'map'>('list')
+  const [page, setPage] = useState<number>(1)
+  const pubEvents = useRef<PubEvent[]>([])
 
   const options: Intl.DateTimeFormatOptions = {
     year: 'numeric',
@@ -33,14 +56,38 @@ export default function Event({id, name, datetime}: EventProps) {
 
   const date = datetime.toLocaleDateString("en-US", options);
 
-  const { data: pubevents, loading, error } = useFetchPubEvents({
-    event_id: id
+  let { data, metadata, loading, error } = useFetchPubEvents({
+    page,
+    event_id: id,
+    pubEvents
   })
 
   const { latitude, longitude, error: locationError }: UseUserCoordinatesReturn = useUserCoordinates()
 
+  useEffect(() => {
+    if (metadata == null) { return; }
+
+    function handleScroll() {
+      const root = document.getElementById('root');
+      if (!root) return;
+
+      const bottom = window.scrollY + window.innerHeight >= root.clientHeight
+
+      if (bottom && metadata) {
+        if (parseInt(metadata.current_page) + 1 <= metadata.total_pages) {
+          setPage(parseInt(metadata.current_page) + 1)
+        }
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [metadata])
+
   return (
     <div className="event-wrapper">
+
       <div className="event-container">
         <div className="event-header">
           <h2 className="event-title">{name}</h2>
@@ -52,7 +99,10 @@ export default function Event({id, name, datetime}: EventProps) {
       </div>
 
       <div className="pubs-section">
-        <h3 className="pubs-section-title">Showing at {pubevents?.length || 0} {pubevents?.length === 1 ? 'Pub' : 'Pubs'}</h3>
+        <h3 className="pubs-section-title">
+          Showing at  {metadata?.total_count || 0}
+           {metadata?.total_count === 1 ? ' Pub' : ' Pubs'}
+        </h3>
 
         {loading && <p className="pubs-loading">Loading venues...</p>}
 
@@ -76,7 +126,7 @@ export default function Event({id, name, datetime}: EventProps) {
         <div className="pubs-content">
           {view === 'list' && (
             <div className="pubs-grid">
-              {pubevents?.map(pubevent => (
+              {pubEvents.current.map(pubevent => (
                 <Pub
                   key={pubevent.pub.id}
                   name={pubevent.pub.name}
@@ -96,7 +146,7 @@ export default function Event({id, name, datetime}: EventProps) {
                 <GoogleMap
                   userLat={latitude}
                   userLong={longitude}
-                  locations={pubevents?.map<Poi>((pubevent) => ({
+                  locations={pubEvents.current.map<Poi>((pubevent) => ({
                     key: pubevent.id,
                     location: {
                       lat: pubevent.pub.latitude,
