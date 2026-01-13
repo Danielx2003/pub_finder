@@ -46,7 +46,7 @@ type PubEvent = {
 export default function Event({id, name, datetime}: EventProps) {
   const [view, setView] = useState<'list' | 'map'>('list')
   const [page, setPage] = useState<number>(1)
-  const pubEvents = useRef<PubEvent[]>([])
+  const [pubEvents, setPubEvents] = useState<PubEvent[]>([])
 
   const options: Intl.DateTimeFormatOptions = {
     year: 'numeric',
@@ -59,7 +59,7 @@ export default function Event({id, name, datetime}: EventProps) {
   let { data, metadata, loading, error } = useFetchPubEvents({
     page,
     event_id: id,
-    pubEvents
+    setPubEvents
   })
 
   const { latitude, longitude, error: locationError }: UseUserCoordinatesReturn = useUserCoordinates()
@@ -126,7 +126,7 @@ export default function Event({id, name, datetime}: EventProps) {
         <div className="pubs-content">
           {view === 'list' && (
             <div className="pubs-grid">
-              {pubEvents.current.map(pubevent => (
+              {pubEvents.map(pubevent => (
                 <Pub
                   key={pubevent.pub.id}
                   name={pubevent.pub.name}
@@ -146,7 +146,7 @@ export default function Event({id, name, datetime}: EventProps) {
                 <GoogleMap
                   userLat={latitude}
                   userLong={longitude}
-                  locations={pubEvents.current.map<Poi>((pubevent) => ({
+                  locations={pubEvents.map<Poi>((pubevent) => ({
                     key: pubevent.id,
                     location: {
                       lat: pubevent.pub.latitude,
