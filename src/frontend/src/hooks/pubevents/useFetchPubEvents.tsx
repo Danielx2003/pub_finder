@@ -1,9 +1,14 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type RefObject } from 'react'
 import { getPubEvents } from '../../api/PubEvent/pubevent'
 
 type UseFetchPubEventsParams = {
   event_id?: number
   pub_id?: number
+  latitude?: number
+  longitude?: number
+  distance?: number
+  page?: number
+  pubEvents?: RefObject<PubEvent[]>
 }
 
 type Event =  {
@@ -14,22 +19,41 @@ type Event =  {
 }
 
 type Pub = {
-    id: number
-    name: string
-    latitude: number
-    longitude: number
+  id: number
+  name: string
+  latitude: number
+  longitude: number
 }
 
 type PubEvent = {
-    id: number
-    pub: Pub
-    event: Event
+  id: number
+  pub: Pub
+  event: Event
+}
+
+type Metadata = {
+  current_page: string
+  page_size: number
+  total_count: number
+  total_pages: number
+}
+
+type PubEventResponse = {
+  data: PubEvent[]
+  _metadata: Metadata | null
+  loading: Boolean
+  error: Error | null
 }
 
 export function useFetchPubEvents(params: UseFetchPubEventsParams) {
-  const [data, setData] = useState<PubEvent[]>([])
-  const [error, setError] = useState<Error | null>(null)
-  const [showLoading, setShowLoading] = useState(false)
+  const [response, setResponse] = useState<PubEventResponse>({
+    data: [],
+    _metadata: null,
+    loading: false,
+    error: null
+  });
+  const [error, setError] = useState<Error | null>(null);
+  const [loading, setLoading] = useState<Boolean>(false);
 
   useEffect(() => {
     let cancelled = false
@@ -40,13 +64,14 @@ export function useFetchPubEvents(params: UseFetchPubEventsParams) {
         setError(null)
 
         loadingTimer = setTimeout(() => {
-          if (!cancelled) setShowLoading(true)
+          if (!cancelled) setLoading(true)
         }, 300)
 
         const result = await getPubEvents(params)
 
         if (!cancelled) {
-          setData(result)
+          setResponse(result)
+          params.pubEvents?.current.push(...result.data)
         }
       } catch (err) {
         if (!cancelled) {
@@ -54,7 +79,7 @@ export function useFetchPubEvents(params: UseFetchPubEventsParams) {
         }
       } finally {
         if (!cancelled) {
-          setShowLoading(false)
+          setLoading(false)
           clearTimeout(loadingTimer)
         }
       }
@@ -66,8 +91,12 @@ export function useFetchPubEvents(params: UseFetchPubEventsParams) {
       cancelled = true
       clearTimeout(loadingTimer)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params.event_id, params.pub_id,])
+  }, [params.event_id, params.pub_id, params.longitude, params.longitude, params.page, params.distance])
 
-  return { data, loading: showLoading, error }
+  return {
+    data: response.data ?? [],
+    metadata: response._metadata ?? null,
+    loading,
+    error
+  }
 }
