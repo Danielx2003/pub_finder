@@ -12,7 +12,7 @@ type GoogleMapProps = {
 export default function GoogleMap({userLat, userLong, locations}: GoogleMapProps) {
     return (
         <>
-        <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
+        <APIProvider apiKey={''}>
             <Map
                 style={{width: '100vh', height: '50vh'}}
                 mapId='EventMap'
