@@ -96,7 +96,10 @@ class PubEventGetAllPubEventsTest(APITestCase):
 
     def test_filter_by_distance(self):
         """GET with event_id filters correctly"""
-        response = self.client.get(self.url, {"event_id": self.event1.id, "longitude": 74.0, "latitude": 41, "distance": 5})
+        response = self.client.get(
+            self.url, 
+            {"event_id": self.event1.id, "longitude": 74.0, "latitude": 41, "distance": 5}
+        )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data['results']), 1)
