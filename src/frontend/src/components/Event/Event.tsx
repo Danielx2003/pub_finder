@@ -55,6 +55,7 @@ export default function Event({id, name, datetime}: EventProps) {
         <h3 className="pubs-section-title">Showing at {pubevents?.length || 0} {pubevents?.length === 1 ? 'Pub' : 'Pubs'}</h3>
 
         {loading && <p className="pubs-loading">Loading venues...</p>}
+
         {error && <p className="pubs-error">Unable to load venues</p>}
 
         <div className="view-toggle">
