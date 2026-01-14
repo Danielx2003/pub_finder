@@ -6,44 +6,14 @@ import Pub from '../Pub/Pub'
 import GoogleMap from '../GoogleMap/GoogleMap'
 import useUserCoordinates from '../../hooks/useUserCoordinates'
 
+import { type PubEvent } from "../../types/pubevent/PubEventTypes"
+import { type EventParams } from '../../types/events/EventTypes'
+import { type UseUserCoordinatesResponse } from '../../types/hooks/UseUserCoordinatesTypes'
+import { type Poi } from '../../types/googlemaps/GoogleMapTypes'
+
 import './Event.css'
 
-type Poi = { key: number, location: google.maps.LatLngLiteral }
-
-type EventProps = {
-  id: number
-  name: string
-  datetime: Date
-}
-
-type UseUserCoordinatesReturn = {
-  latitude: number
-  longitude: number
-  error: string | null
-}
-
-type Event =  {
-  id: number
-  name: string
-  sport: string
-  date_time: string
-}
-
-type Pub = {
-  id: number
-  name: string
-  latitude: number
-  longitude: number
-}
-
-type PubEvent = {
-  id: number
-  pub: Pub
-  event: Event
-}
-
-
-export default function Event({id, name, datetime}: EventProps) {
+export default function Event({id, name, datetime}: EventParams) {
   const [view, setView] = useState<'list' | 'map'>('list')
   const [page, setPage] = useState<number>(1)
   const [pubEvents, setPubEvents] = useState<PubEvent[]>([])
@@ -63,7 +33,7 @@ export default function Event({id, name, datetime}: EventProps) {
     setPubEvents
   })
 
-  const { latitude, longitude, error: locationError }: UseUserCoordinatesReturn = useUserCoordinates()
+  const { latitude, longitude, error: locationError }: UseUserCoordinatesResponse = useUserCoordinates()
 
   useEffect(() => {
     if (metadata == null) { return; }

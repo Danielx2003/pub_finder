@@ -1,49 +1,8 @@
 import { useEffect, useState } from 'react'
 import { getPubEvents } from '../../api/PubEvent/pubevent'
 
-type UseFetchPubEventsParams = {
-  event_id?: number
-  pub_id?: number
-  latitude?: number
-  longitude?: number
-  distance?: number
-  page?: number
-  setPubEvents: React.Dispatch<React.SetStateAction<PubEvent[]>>
-}
-
-type Event =  {
-  id: number
-  name: string
-  sport: string
-  date_time: string
-}
-
-type Pub = {
-  id: number
-  name: string
-  latitude: number
-  longitude: number
-}
-
-type PubEvent = {
-  id: number
-  pub: Pub
-  event: Event
-}
-
-type Metadata = {
-  current_page: string
-  page_size: number
-  total_count: number
-  total_pages: number
-}
-
-type PubEventResponse = {
-  data: PubEvent[]
-  _metadata: Metadata | null
-  loading: boolean
-  error: Error | null
-}
+import { type UseFetchPubEventsParams } from '../../types/hooks/UseFetchPubEventsTypes'
+import { type PubEventResponse } from '../../types/api/GetPubEventsTypes';
 
 export function useFetchPubEvents(params: UseFetchPubEventsParams) {
   const [response, setResponse] = useState<PubEventResponse>({

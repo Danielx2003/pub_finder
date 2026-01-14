@@ -5,6 +5,8 @@ import SearchBar from '../SearchBar/SearchBar'
 import useDebounce from '../../hooks/useDebounce'
 import { useEvents } from '../../hooks/events/useEvents'
 
+import { type EventFilters } from '../../types/events/EventTypes'
+
 import './EventSearch.css'
 
 export default function EventSearch() {
@@ -12,7 +14,7 @@ export default function EventSearch() {
 
   const dateNow = new Date()
 
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<EventFilters>({
     sport: '',
     date: `${dateNow.getFullYear()}-` + 
           `${(dateNow.getMonth() + 1).toString().padStart(2, "0")}-` +

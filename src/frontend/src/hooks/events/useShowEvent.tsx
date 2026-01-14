@@ -1,16 +1,8 @@
 import { useEffect, useState } from 'react'
 import { getEventById } from '../../api/Events/events'
 
-type UseShowEventParams = {
-    id: string
-}
-
-type Event =  {
-  id: number
-  name: string
-  sport: string
-  date_time: string
-}
+import { type Event } from '../../types/events/EventTypes'
+import { type UseShowEventParams } from '../../types/hooks/UseShowEventTypes'
 
 export function useShowEvent(params: UseShowEventParams) {
   const [event, setEvent] = useState<Event | null>(null)

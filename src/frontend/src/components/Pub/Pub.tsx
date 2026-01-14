@@ -1,10 +1,6 @@
-import './Pub.css'
+import { type PubProps } from '../../types/pub/PubTypes'
 
-type PubProps = {
-    name: string
-    longitude: number
-    latitude: number
-}
+import './Pub.css'
 
 export default function Pub({name, longitude, latitude}: PubProps) {
     return (
