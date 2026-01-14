@@ -1,20 +1,8 @@
 import { useEffect, useState } from 'react'
 import { getEvents } from '../../api/Events/events'
 
-type UseEventsParams = {
-  name?: string
-  sport?: string
-  date?: string
-  time?: string
-  sortBy?: string
-}
-
-type Event =  {
-  id: number
-  name: string
-  sport: string
-  date_time: string
-}
+import { type UseEventsParams } from '../../types/hooks/UseEventTypes'
+import { type Event } from '../../types/events/EventTypes'
 
 export function useEvents(params: UseEventsParams) {
   const [data, setData] = useState<Event[]>([])

@@ -1,13 +1,7 @@
-import {APIProvider, Map} from '@vis.gl/react-google-maps';
+import { APIProvider, Map } from '@vis.gl/react-google-maps';
 import PoiMarkers from './PoiMarkers';
 
-type Poi = { key: number, location: google.maps.LatLngLiteral }
-
-type GoogleMapProps = {
-    userLat: number
-    userLong: number
-    locations: Poi[]
-}
+import { type GoogleMapProps } from '../../types/googlemaps/GoogleMapTypes';
 
 export default function GoogleMap({userLat, userLong, locations}: GoogleMapProps) {
     return (
