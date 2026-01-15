@@ -12,6 +12,7 @@ import { type UseUserCoordinatesResponse } from '../../types/hooks/UseUserCoordi
 import { type Poi } from '../../types/googlemaps/GoogleMapTypes'
 
 import './Event.css'
+import useInfiniteScroll from '../../hooks/useInfiniteScroll'
 
 export default function Event({id, name, datetime}: EventParams) {
   const [view, setView] = useState<'list' | 'map'>('list')
@@ -33,28 +34,15 @@ export default function Event({id, name, datetime}: EventParams) {
     setPubEvents
   })
 
+  useInfiniteScroll({
+    trigger: setPage,
+    screenId: 'root',
+    currentPage: metadata ? parseInt(metadata.current_page) : undefined,
+    maxPage: metadata?.total_pages,
+    loading
+  });
+
   const { latitude, longitude, error: locationError }: UseUserCoordinatesResponse = useUserCoordinates()
-
-  useEffect(() => {
-    if (metadata == null) { return; }
-
-    function handleScroll() {
-      const root = document.getElementById('root');
-      if (!root) return;
-
-      const bottom = window.scrollY + window.innerHeight >= root.clientHeight
-
-      if (bottom && metadata) {
-        if (parseInt(metadata.current_page) + 1 <= metadata.total_pages) {
-          setPage(parseInt(metadata.current_page) + 1)
-        }
-      }
-    }
-
-    window.addEventListener('scroll', handleScroll);
-
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [metadata])
 
   return (
     <div className="event-wrapper">
