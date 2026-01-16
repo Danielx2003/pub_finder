@@ -36,7 +36,6 @@ export default function Event({id, name, datetime}: EventParams) {
 
   useInfiniteScroll({
     trigger: setPage,
-    screenId: 'root',
     currentPage: metadata ? parseInt(metadata.current_page) : undefined,
     maxPage: metadata?.total_pages,
     loading
