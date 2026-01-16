@@ -1,4 +1,9 @@
+"""CustomPagination file"""
+
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
+
+# pylint: disable=too-few-public-methods
 
 class CustomPagination(PageNumberPagination):
     """Custom pagination for APIs"""
@@ -7,6 +12,7 @@ class CustomPagination(PageNumberPagination):
     max_page_size = 1000
 
     def get_paginated_response(self, data):
+        """Overrides the PageNumberPagination default response"""
         return Response({
             '_metadata': {
                 'current_page': self.get_page_number(self.request, self),
@@ -16,3 +22,4 @@ class CustomPagination(PageNumberPagination):
             },
             'data': data
         })
+    
