@@ -29,7 +29,7 @@ const useInfiniteScroll = ({
         ) {
             trigger(prev => prev+1);
         }
-    }, [screenId, currentPage, maxPage]);
+    }, [trigger, screenId, currentPage, maxPage, loading]);
 
     useEffect(() => {       
         window.addEventListener('scroll', handleScroll);
