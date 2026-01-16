@@ -14,25 +14,9 @@ from django.shortcuts import get_object_or_404
 from events.models import Event
 from events.serializers import EventSerializer
 
-class EventPagination(PageNumberPagination):
-    """Custom pagination for PubEvents"""
-    page_size = 5
-    page_size_query_param = 'page_size'
-    max_page_size = 1000
+from ..shared.custom_pagination import CustomPagination
 
-    def get_paginated_response(self, data):
-        return Response({
-            '_metadata': {
-                'current_page': self.get_page_number(self.request, self),
-                'page_size': self.page_size,
-                'total_count': self.page.paginator.count,
-                'total_pages': self.page.paginator.num_pages,
-            },
-            'data': data
-        })
-
-
-class EventListView(APIView, EventPagination):
+class EventListView(APIView, CustomPagination):
     """[GET] Returns all Events"""
     def get(self, request):
         name = request.GET.get('name', "")
@@ -70,6 +54,7 @@ class EventListView(APIView, EventPagination):
 
         return self.get_paginated_response(serializer.data)
 
+
 class EventCreateView(APIView):
     """[POST] Create an Event"""
     def post(self, request):
@@ -80,6 +65,7 @@ class EventCreateView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class EventGetView(APIView):
     """[GET] Return single Event by ID"""
