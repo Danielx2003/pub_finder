@@ -13,7 +13,10 @@ from django.shortcuts import get_object_or_404
 from events.models import Event
 from events.serializers import EventSerializer
 
-class EventListView(APIView):
+from shared.custom_pagination import CustomPagination
+
+
+class EventListView(APIView, CustomPagination):
     """[GET] Returns all Events"""
     def get(self, request):
         name = request.GET.get('name', "")
@@ -21,16 +24,16 @@ class EventListView(APIView):
         sort_by = request.GET.get('sort_by', "")
         start = request.GET.get('start', "")
 
-        events = Event.objects.all()
+        queryset = Event.objects.all()
 
         if name:
-            events = events.filter(name__contains=name)
+            queryset = queryset.filter(name__contains=name)
 
         if sport:
-            events = events.filter(sport=sport)
+            queryset = queryset.filter(sport=sport)
 
         if sort_by:
-            events = events.order_by(sort_by)
+            queryset = queryset.order_by(sort_by)
 
         if start:
             try:
@@ -41,11 +44,16 @@ class EventListView(APIView):
                     'Invalid start date provided. Must be in the format YYYY-MM-DD HH:mm'}, 
                     status=status.HTTP_400_BAD_REQUEST)
 
-            events = events.filter(date_time__gte=date_time)
+            queryset = queryset.filter(date_time__gte=date_time)
 
-        serializer = EventSerializer(events, many=True)
+        queryset = queryset.order_by('date_time')
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        page = self.paginate_queryset(queryset, request, view=self)
+
+        serializer = EventSerializer(page, many=True)
+
+        return self.get_paginated_response(serializer.data)
+
 
 class EventCreateView(APIView):
     """[POST] Create an Event"""
@@ -57,6 +65,7 @@ class EventCreateView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class EventGetView(APIView):
     """[GET] Return single Event by ID"""
