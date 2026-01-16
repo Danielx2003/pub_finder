@@ -12,7 +12,7 @@ from django.contrib.gis.db.models.functions import GeometryDistance
 from pub_events.models import PubEvent
 from pub_events.serializers import PubEventSerializer
 
-from ..shared.custom_pagination import CustomPagination
+from shared.custom_pagination import CustomPagination
 
 
 class PubEventListView(APIView, CustomPagination):

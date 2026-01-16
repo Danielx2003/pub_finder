@@ -15,6 +15,7 @@ from events.serializers import EventSerializer
 
 from shared.custom_pagination import CustomPagination
 
+
 class EventListView(APIView, CustomPagination):
     """[GET] Returns all Events"""
     def get(self, request):
