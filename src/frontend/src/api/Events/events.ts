@@ -4,6 +4,7 @@ type GetEventsParams = {
   date?: string
   time?: string
   sortBy?: string
+  page: number
 }
 
 export async function getEvents(params: GetEventsParams) {
@@ -28,6 +29,8 @@ export async function getEvents(params: GetEventsParams) {
     const time = params.time ?? '00:00'
     url.searchParams.append('start', `${params.date} ${time}`)
   }
+
+  url.searchParams.append('page', `${params.page}`)
 
   const res = await fetch(url.toString())
 

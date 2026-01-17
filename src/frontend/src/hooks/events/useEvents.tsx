@@ -2,10 +2,19 @@ import { useEffect, useState } from 'react'
 import { getEvents } from '../../api/Events/events'
 
 import { type UseEventsParams } from '../../types/hooks/UseEventTypes'
-import { type Event } from '../../types/events/EventTypes'
+import { type UseEventResult } from '../../types/hooks/UseEventTypes'
 
 export function useEvents(params: UseEventsParams) {
-  const [data, setData] = useState<Event[]>([])
+  const [response, setResponse] = useState<UseEventResult>({
+    data: [],
+    _metadata: {
+      current_page: '0',
+      total_pages: 0,
+      total_count: 0,
+      page_size: 5
+    }
+  });
+
   const [error, setError] = useState<Error | null>(null)
   const [showLoading, setShowLoading] = useState(false)
 
@@ -24,7 +33,8 @@ export function useEvents(params: UseEventsParams) {
         const result = await getEvents(params)
 
         if (!cancelled) {
-          setData(result)
+          setResponse(result)
+          params.setEvents(prevItems => [...prevItems, ...result.data])
         }
       } catch (err) {
         if (!cancelled) {
@@ -45,7 +55,12 @@ export function useEvents(params: UseEventsParams) {
       clearTimeout(loadingTimer)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params.name, params.sport, params.date, params.sortBy, params.time])
+  }, [params.name, params.sport, params.date, params.sortBy, params.time, params.page])
 
-  return { data, loading: showLoading, error }
+  return {
+    data: response.data,
+    metadata: response._metadata,
+    loading: showLoading,
+    error
+  }
 }
