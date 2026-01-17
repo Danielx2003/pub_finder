@@ -17,10 +17,12 @@ const useInfiniteScroll = ({
 }: UseInfiniteScrollParams) => {
     const handleScroll = useCallback(() => {
         const root = document.getElementById(screenId);
+
         if (!root || loading) return;
 
         const bottom =
-            window.scrollY + window.innerHeight >= root.clientHeight;
+            screenId == 'root' ? window.scrollY + window.innerHeight >= root.clientHeight :
+            root.scrollTop > 99;
 
         if (bottom &&
             currentPage &&
@@ -31,11 +33,19 @@ const useInfiniteScroll = ({
         }
     }, [trigger, screenId, currentPage, maxPage, loading]);
 
-    useEffect(() => {       
-        window.addEventListener('scroll', handleScroll);
+    useEffect(() => {
+        if (screenId == 'root') {
+            window.addEventListener('scroll', handleScroll);
+        } else {
+            document.getElementById(screenId)?.addEventListener('scroll', handleScroll)
+        }
 
         return () => {
-            window.removeEventListener('scroll', handleScroll);
+            if (screenId == 'root') {
+                window.removeEventListener('scroll', handleScroll);
+            } else {
+                document.getElementById(screenId)?.removeEventListener('scroll', handleScroll)
+            }
         };
     }, [handleScroll]);
 }
