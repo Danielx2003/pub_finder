@@ -29,6 +29,7 @@ export default function EventSearch() {
   
   const debouncedSearchValue = useDebounce(searchValue, 500)
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { data, metadata, loading, error } = useEvents({
     name: debouncedSearchValue,
     sport: filters.sport,
