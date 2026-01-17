@@ -4,13 +4,16 @@ import { Link } from 'react-router-dom'
 import SearchBar from '../SearchBar/SearchBar'
 import useDebounce from '../../hooks/useDebounce'
 import { useEvents } from '../../hooks/events/useEvents'
+import useInfiniteScroll from '../../hooks/useInfiniteScroll'
 
-import { type EventFilters } from '../../types/events/EventTypes'
+import { type Event, type EventFilters } from '../../types/events/EventTypes'
 
 import './EventSearch.css'
 
 export default function EventSearch() {
   const [searchValue, setSearchValue] = useState<string>('')
+  const [page, setPage] = useState<number>(1);
+  const [events, setEvents] = useState<Event[]>([])
 
   const dateNow = new Date()
 
@@ -26,12 +29,22 @@ export default function EventSearch() {
   
   const debouncedSearchValue = useDebounce(searchValue, 500)
 
-  const { data: events, loading, error } = useEvents({
+  const { data, metadata, loading, error } = useEvents({
     name: debouncedSearchValue,
     sport: filters.sport,
     date: filters.date,
-    sortBy: sort
+    sortBy: sort,
+    page,
+    setEvents
   })
+
+  useInfiniteScroll({
+    trigger: setPage,
+    currentPage: metadata ? parseInt(metadata.current_page) : undefined,
+    maxPage: metadata?.total_pages,
+    screenId: 'events-list',
+    loading
+  });
   
   return (
     <div className="event-search-container">
@@ -99,7 +112,7 @@ export default function EventSearch() {
           {loading && <p className="status-message">Loading…</p>}
           {error && <p className="status-message error">{error.message}</p>}
           
-            <div className="events-list">
+            <div className="events-list" id="events-list">
               {events.map((event) => (
                 <div key={event.id} className="event-card">
                   <div className="event-info">
