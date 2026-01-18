@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useNavigate } from "react-router-dom";
 
 import SearchBar from '../SearchBar/SearchBar'
 import useDebounce from '../../hooks/useDebounce'
@@ -10,7 +10,11 @@ import { type Event, type EventFilters } from '../../types/events/EventTypes'
 
 import './EventSearch.css'
 
+const SCREEN_ID = 'events-list'
+
 export default function EventSearch() {
+  const navigator = useNavigate();
+
   const [searchValue, setSearchValue] = useState<string>('')
   const [page, setPage] = useState<number>(1);
   const [events, setEvents] = useState<Event[]>([])
@@ -43,10 +47,29 @@ export default function EventSearch() {
     trigger: setPage,
     currentPage: metadata ? parseInt(metadata.current_page) : undefined,
     maxPage: metadata?.total_pages,
-    screenId: 'events-list',
+    screenId: SCREEN_ID,
     loading
   });
-  
+
+  useEffect(() => {
+    const ev = localStorage.getItem('events') ?? ''
+    setEvents(JSON.parse(ev))
+    const scrollHeight = localStorage.getItem('event-search-scroll-height') ?? '0';
+
+    setTimeout(() => {
+      document.getElementById(SCREEN_ID)?.scrollTo({
+        top: parseInt(scrollHeight)
+      })
+    }, 250)
+  }, [])
+
+  const handleViewDetails = (eventId: number) => e => {
+    const scrollHeight = document?.getElementById(SCREEN_ID)?.scrollTop ?? 0
+    localStorage.setItem('event-search-scroll-height', `${scrollHeight}`)
+    localStorage.setItem('events', JSON.stringify(events))
+    navigator(`/events/${eventId}`)
+  }
+
   return (
     <div className="event-search-container">
       <div className="header">
@@ -113,7 +136,7 @@ export default function EventSearch() {
           {loading && <p className="status-message">Loading…</p>}
           {error && <p className="status-message error">{error.message}</p>}
           
-            <div className="events-list" id="events-list">
+            <div className="events-list" id={SCREEN_ID}>
               {events.map((event) => (
                 <div key={event.id} className="event-card">
                   <div className="event-info">
@@ -131,7 +154,7 @@ export default function EventSearch() {
                       )}
                     </p>
                   </div>
-                  <Link to={'/events/' + event.id} className='view-btn'>View Details</Link>
+                  <button onClick={handleViewDetails(event.id)}>View Details</button>
                 </div>
               ))}
             </div>
