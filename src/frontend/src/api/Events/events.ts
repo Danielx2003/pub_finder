@@ -1,3 +1,5 @@
+import { type UseEventResult } from '../../types/hooks/UseEventTypes'
+
 type GetEventsParams = {
   name?: string
   sport?: string
@@ -7,7 +9,7 @@ type GetEventsParams = {
   page: number
 }
 
-export async function getEvents(params: GetEventsParams) {
+export async function getEvents(params: GetEventsParams): Promise<UseEventResult>  {
   const url = new URL(
     `${import.meta.env.VITE_API_URL}/api/v1/event`
   )

@@ -22,7 +22,7 @@ const useInfiniteScroll = ({
 
         const bottom =
             screenId == 'root' ? window.scrollY + window.innerHeight >= root.clientHeight :
-            root.scrollTop > 99;
+            root.scrollHeight - root.scrollTop - root.clientHeight < 1
 
         if (bottom &&
             currentPage &&
