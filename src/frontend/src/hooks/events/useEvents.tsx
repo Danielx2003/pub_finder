@@ -34,7 +34,11 @@ export function useEvents(params: UseEventsParams) {
 
         if (!cancelled) {
           setResponse(result)
-          params.setEvents(prevItems => [...prevItems, ...result.data])
+          params.setEvents(prevItems => {
+            const existingIds = new Set(prevItems.map(event => event.id))
+            const eventsToAdd = result.data.filter(event => !existingIds.has(event.id))
+            return [...prevItems, ...eventsToAdd]
+          })
         }
       } catch (err) {
         if (!cancelled) {
