@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 import Countdown from '../Countdown/Countdown'
 import { useFetchPubEvents } from '../../hooks/pubevents/useFetchPubEvents'
@@ -45,7 +46,9 @@ export default function Event({id, name, datetime}: EventParams) {
 
   return (
     <div className="event-wrapper">
-
+      <div className='back-btn'>
+      <Link to={'/events'}>Back</Link>
+      </div>
       <div className="event-container">
         <div className="event-header">
           <h2 className="event-title">{name}</h2>
