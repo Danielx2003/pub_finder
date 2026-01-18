@@ -17,7 +17,10 @@ export default function EventSearch() {
 
   const [searchValue, setSearchValue] = useState<string>('')
   const [page, setPage] = useState<number>(1);
-  const [events, setEvents] = useState<Event[]>([])
+  const [events, setEvents] = useState<Event[]>(() => {
+    const ev = localStorage.getItem('events') ?? ''
+    return JSON.parse(ev)
+  })
 
   const dateNow = new Date()
 
@@ -52,8 +55,6 @@ export default function EventSearch() {
   });
 
   useEffect(() => {
-    const ev = localStorage.getItem('events') ?? ''
-    setEvents(JSON.parse(ev))
     const scrollHeight = localStorage.getItem('event-search-scroll-height') ?? '0';
 
     setTimeout(() => {
@@ -63,6 +64,7 @@ export default function EventSearch() {
     }, 250)
   }, [])
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleViewDetails = (eventId: number) => e => {
     const scrollHeight = document?.getElementById(SCREEN_ID)?.scrollTop ?? 0
     localStorage.setItem('event-search-scroll-height', `${scrollHeight}`)
