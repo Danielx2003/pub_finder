@@ -230,3 +230,63 @@
     height: 400px;
   }
 }
+
+/* Back Button */
+.back-btn {
+  display: flex;
+  margin-bottom: 24px;
+}
+
+.back-btn a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #667eea;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.back-btn a::before {
+  content: "←";
+  font-size: 18px;
+}
+
+.back-btn a:hover {
+  background: #f9fafb;
+  border-color: #667eea;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+  transform: translateX(-2px);
+}
+
+.back-btn a:active {
+  transform: translateX(-1px);
+}
+
+@media (max-width: 768px) {
+  .back-btn {
+    margin-bottom: 20px;
+  }
+
+  .back-btn a {
+    padding: 9px 18px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .back-btn {
+    margin-bottom: 16px;
+  }
+
+  .back-btn a {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+}
